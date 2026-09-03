@@ -1,5 +1,6 @@
 #include<Windows.h>
 #include"KamataEngine.h"
+#include"Player.h"
 
 
 /// <summary>
@@ -37,6 +38,7 @@ private: // メンバ変数
 	KamataEngine::DirectXCommon* dxCommon_ = nullptr;
 	KamataEngine::Input* input_ = nullptr;
 	KamataEngine::Audio* audio_ = nullptr;
+	Player* player_ = nullptr;
 
 	/// <summary>
 	/// ゲームシーン用
