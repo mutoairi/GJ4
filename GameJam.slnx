@@ -5,5 +5,5 @@
     <BuildType Name="Release" />
     <Platform Name="x64" />
   </Configurations>
-  <Project Path="GameJam/GameJam.vcxproj" />
+  <Project Path="GameJam/GameJam.vcxproj" Id="736c1451-a70f-4c4d-ba40-4d1b0c226270" />
 </Solution>
