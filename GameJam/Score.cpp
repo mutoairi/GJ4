@@ -67,3 +67,27 @@ void Score::Draw()
         value /= 10;
     }
 }
+
+void Score::SetPosition(KamataEngine::Vector2 position)
+{
+    position_ = position;
+
+    for (int i = 0; i < kDigitCount; i++) {
+
+        KamataEngine::Vector2 digitPosition = {
+            position_.x + digitSize_.x * i,
+            position_.y
+        };
+
+        digitSprites_[i]->SetPosition(digitPosition);
+    }
+}
+
+void Score::SetDigitSize(KamataEngine::Vector2 size)
+{
+    digitSize_ = size;
+
+    for (int i = 0; i < kDigitCount; i++) {
+        digitSprites_[i]->SetSize(digitSize_);
+    }
+}

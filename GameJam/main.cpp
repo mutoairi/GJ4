@@ -1,8 +1,15 @@
 #include <Windows.h>
 #include<KamataEngine.h>
 #include"GameScene.h"
-
+#include"Title.h"
+#include"ResultScene.h"
 using namespace KamataEngine;
+
+enum class Scene{
+	Title,
+	Game,
+	Result
+};
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
@@ -13,8 +20,8 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	Audio* audio = nullptr;
 	AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
-	GameScene* gameScene = nullptr;
 
+	
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
 	// フルスクリーンに設定
@@ -53,11 +60,19 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	primitiveDrawer = PrimitiveDrawer::GetInstance();
 	primitiveDrawer->Initialize();
+	Scene scene = Scene::Title;
+
+	//タイトル
+	Title* title = nullptr;
+	title = new Title();
+	title->Initialize();
+	//ゲーム
+	GameScene* gameScene = nullptr;
+	//Result
+	ResultScene* resultScene = nullptr;
 #pragma endregion
 
-	// ゲームシーンの初期化
-	gameScene = new GameScene();
-	gameScene->Initialize();
+	
 
 	// メインループ
 	while (true) {
@@ -71,7 +86,121 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		// 入力関連の毎フレーム処理
 		input->Update();
 		// ゲームシーンの毎フレーム処理
-		gameScene->Update();
+		// ====================================
+		// Scene Update
+		// ====================================
+
+		switch (scene) {
+
+			// ------------------------------------
+			// Title
+			// ------------------------------------
+
+		case Scene::Title:
+
+			title->Update();
+
+			// SPACEが押された
+			if (title->IsFinished()) {
+
+				// Title終了
+				delete title;
+				title = nullptr;
+
+
+				// GameScene生成
+				gameScene = new GameScene();
+
+				gameScene->Initialize();
+
+
+				// Scene変更
+				scene = Scene::Game;
+			}
+
+			break;
+
+
+			// ------------------------------------
+			// Game
+			// ------------------------------------
+
+		case Scene::Game:
+
+			gameScene->Update();
+
+			// 岩に当たって、
+			// バラバラ演出などが終了したらtrue
+			if (gameScene->IsFinished()) {
+
+				// ----------------------------
+				// スコアを保存
+				// ----------------------------
+
+				int finalScore =
+					gameScene->GetFinalScore();
+
+
+				// ----------------------------
+				// GameScene終了
+				// ----------------------------
+
+				delete gameScene;
+				gameScene = nullptr;
+
+
+				// ----------------------------
+				// ResultScene生成
+				// ----------------------------
+
+				resultScene =
+					new ResultScene();
+
+				resultScene->Initialize(
+					finalScore
+				);
+
+
+				// ----------------------------
+				// Scene変更
+				// ----------------------------
+
+				scene = Scene::Result;
+			}
+
+			break;
+
+
+			// ------------------------------------
+			// Result
+			// ------------------------------------
+
+		case Scene::Result:
+
+			resultScene->Update();
+
+			// SPACEなどでタイトルへ戻る
+			if (resultScene->IsFinished()) {
+
+				// ResultScene削除
+				delete resultScene;
+				resultScene = nullptr;
+
+
+				// TitleSceneを作り直す
+				title = new Title();
+
+				title->Initialize();
+
+
+				// Titleへ
+				scene = Scene::Title;
+			}
+
+			break;
+		}
+
+		
 		// 軸表示の更新
 		axisIndicator->Update();
 		// ImGui受付終了
@@ -80,7 +209,29 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画
-		gameScene->Draw();
+		switch (scene) {
+
+		case Scene::Title:
+
+			title->Draw();
+
+			break;
+
+
+		case Scene::Game:
+
+			gameScene->Draw();
+
+			break;
+
+
+		case Scene::Result:
+
+			resultScene->Draw();
+
+			break;
+		}
+
 		// 軸表示の描画
 		axisIndicator->Draw();
 		// プリミティブ描画のリセット
@@ -92,8 +243,11 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	}
 
 	// 各種解放
+	//delete gameScene;
+	delete title;
 	delete gameScene;
-	// 3Dモデル解放
+	delete resultScene;
+
 	
 	audio->Finalize();
 	// ImGui解放
@@ -104,3 +258,5 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 
 	return 0;
 }
+
+

@@ -38,6 +38,26 @@ void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
 
+	
+  // -------------------------
+  // BGM
+  // -------------------------
+
+	bgmHandle_ = audio_->LoadWave("Reflect.wav");
+
+	// trueでループ再生
+	bgmVoiceHandle_ = audio_->PlayWave(
+		bgmHandle_,
+		true
+	);
+
+	// 岩に当たったSE
+	hitSEHandle_ =
+		audio_->LoadWave("dead.wav");
+
+	// アイテム取得SE
+	itemSEHandle_ =
+		audio_->LoadWave("item.wav");
 	// -------------------------
 	// 背景
 	// -------------------------
@@ -63,6 +83,8 @@ void GameScene::Initialize() {
 
 	isFinished_ = false;
 
+	Timer_ = 10;
+
 	rockSpawnTimer_ = 0;
 	itemSpawnTimer_ = 0;
 
@@ -76,6 +98,10 @@ void GameScene::Update() {
 	// ゲームオーバーなら更新停止
 	// ===================================
 
+	if (Timer_ <= 0) {
+		isFinished_ = true;
+		audio_->StopWave(bgmVoiceHandle_);
+	}
 	if (isFinished_) {
 		return;
 	}
@@ -264,7 +290,12 @@ void GameScene::CheckCollisions() {
 		)) {
 
 			// 岩に当たった
-			isFinished_ = true;
+			 // 岩に当たった効果音
+			audio_->PlayWave(
+				hitSEHandle_,
+				false
+			);
+			Timer_--;
 
 			return;
 		}
@@ -292,7 +323,12 @@ void GameScene::CheckCollisions() {
 			item->Collect();
 
 			// 100点追加
-			score_->AddScore(100);
+			score_->AddScore(50);
+			// アイテム取得SE
+			audio_->PlayWave(
+				itemSEHandle_,
+				false
+			);
 		}
 	}
 }

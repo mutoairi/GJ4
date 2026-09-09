@@ -17,6 +17,10 @@ public:
         return score_;
     }
 
+    void SetPosition(KamataEngine::Vector2 pos);
+
+    void SetDigitSize(KamataEngine::Vector2 size);
+
 private:
     int score_ = 0;
 

@@ -38,7 +38,13 @@ public:
 
 	// 画面外・取得済みオブジェクトの削除
 	void RemoveDeadObjects();
+	bool IsFinished() const {
+		return isFinished_;
+	}
 
+	int GetFinalScore() const {
+		return score_->GetScore();
+	}
 private:
 	KamataEngine::DirectXCommon* dxCommon_ = nullptr;
 	KamataEngine::Input* input_ = nullptr;
@@ -69,7 +75,16 @@ private:
 	int rockSpawnTimer_ = 0;
 	int itemSpawnTimer_ = 0;
 
+	int Timer_ = 10;
+	//BGM
+	uint32_t bgmHandle_ = 0;
+	uint32_t bgmVoiceHandle_ = 0;
 
+	// 岩に当たった音
+	uint32_t hitSEHandle_ = 0;
+
+	// アイテム取得音
+	uint32_t itemSEHandle_ = 0;
 
 	// 約1.5秒
 	static constexpr int kRockSpawnInterval = 90;
