@@ -76,7 +76,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 		axisIndicator->Update();
 		// ImGui受付終了
 		//guiManager->End();
-
+		Sprite::ResetInstanceCount();
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画
