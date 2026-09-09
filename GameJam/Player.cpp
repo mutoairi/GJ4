@@ -1,13 +1,18 @@
 #include "Player.h"
-#include <algorithm>
-#include <cassert>
 
 using namespace KamataEngine;
 
-void Player::Initialize(Input* input)
-{
+Player::Player() {}
+
+Player::~Player() {
+    delete sprite_;
+}
+
+void Player::Initialize(Input* input) {
+
     input_ = input;
 
+    // 中央レーンから開始
     lane_ = 1;
 
     position_ = {
@@ -15,36 +20,45 @@ void Player::Initialize(Input* input)
         kLaneY[lane_]
     };
 
-    textureHandle_ = TextureManager::Load("uvChecker.png");
+    textureHandle_ =
+        TextureManager::Load("Player.png");
 
     sprite_ = Sprite::Create(
         textureHandle_,
-        position_
+        position_,
+        { 1.0f, 1.0f, 1.0f, 1.0f },
+
+        // Spriteの中心をpositionにする
+        { 0.5f, 0.5f }
     );
+
+    sprite_->SetSize(size_);
 }
 
-void Player::Update()
-{
+void Player::Update() {
+
+    // 上
     if (input_->TriggerKey(DIK_W)) {
-        lane_--;
+
+        if (lane_ > 0) {
+            lane_--;
+        }
     }
 
+    // 下
     if (input_->TriggerKey(DIK_S)) {
-        lane_++;
+
+        if (lane_ < 2) {
+            lane_++;
+        }
     }
-
-    // ★絶対に0～2から出さない
-    lane_ = std::clamp(lane_, 0, 2);
-
-    // ★デバッグ中に範囲外になったらここで止める
-    assert(lane_ >= 0 && lane_ < 3);
 
     position_.y = kLaneY[lane_];
 
     sprite_->SetPosition(position_);
 }
 
-void Player::Draw()
-{
+void Player::Draw() {
+
     sprite_->Draw();
 }

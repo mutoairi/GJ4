@@ -6,7 +6,7 @@ public:
     Item();
     ~Item();
 
-    void Initialize();
+    void Initialize(KamataEngine::Vector2 position);
     void Update();
     void Draw();
 
@@ -14,22 +14,40 @@ public:
         return position_;
     }
 
-    KamataEngine::Vector2 GetSize() const {
-        return size_;
+    float GetRadius() const {
+        return radius_;
     }
 
-    void Respawn();
+    // 取得済みか
+    bool IsCollected() const {
+        return isCollected_;
+    }
+
+    // 取得する
+    void Collect() {
+        isCollected_ = true;
+    }
+
+    // 画面外
+    bool IsDead() const {
+        return position_.x < -100.0f;
+    }
 
 private:
     KamataEngine::Sprite* sprite_ = nullptr;
+
     uint32_t textureHandle_ = 0;
 
     KamataEngine::Vector2 position_{};
 
     KamataEngine::Vector2 size_ = {
-        32.0f,
-        32.0f
+        150.0f,
+        150.0f
     };
 
+    float radius_ = 70.0f;
+
     float speed_ = 5.0f;
+
+    bool isCollected_ = false;
 };

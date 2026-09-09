@@ -1,6 +1,6 @@
 
 constexpr float kLaneY[3] = {
-    5.0f,
-    36.0f,
-    72.0f
+    20.0f,
+    300.0f,
+    600.0f
 };
