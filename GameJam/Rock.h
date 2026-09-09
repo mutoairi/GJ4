@@ -1,10 +1,10 @@
 #pragma once
 #include <KamataEngine.h>
 
-class Item {
+class Rock {
 public:
-    Item();
-    ~Item();
+    Rock();
+    ~Rock();
 
     void Initialize();
     void Update();
@@ -18,9 +18,9 @@ public:
         return size_;
     }
 
+private:
     void Respawn();
 
-private:
     KamataEngine::Sprite* sprite_ = nullptr;
     uint32_t textureHandle_ = 0;
 
