@@ -18,7 +18,7 @@ int WINAPI WinMain(_In_ HINSTANCE, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int) {
 	// ゲームウィンドウの作成
 	win = WinApp::GetInstance();
 	// フルスクリーンに設定
-	win->CreateGameWindow(L"GameJam");
+	win->CreateGameWindow(L"4064_マグロは止まらない");
 
 	//n->SetFullscreen(true);
 

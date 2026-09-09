@@ -47,8 +47,8 @@ private:
 
     // レーン位置
     static constexpr float kLaneY[3] = {
-        50.0f,
-        300.0f,
+        70.0f,
+        350.0f,
         600.0f
     };
 };

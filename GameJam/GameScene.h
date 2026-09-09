@@ -8,6 +8,7 @@
 #include "Rock.h"
 #include "Item.h"
 #include "Score.h"
+#include"Background.h"
 
 class GameScene {
 public:
@@ -46,6 +47,9 @@ private:
 	// プレイヤー
 	Player* player_ = nullptr;
 
+	//背景
+	Background* backGround_ = nullptr;
+
 	// 岩
 	std::vector<Rock*> rocks_;
 
@@ -56,7 +60,7 @@ private:
 	Score* score_ = nullptr;
 
 	// ゲームオーバー
-	bool isGameOver_ = false;
+	bool isFinished_ = false;
 
 	// -------------------------
 	// 生成タイマー
@@ -78,8 +82,8 @@ private:
 
 	// 3レーン
 	static constexpr float kLaneY[3] = {
-		50.0f,
-		300.0f,
+		70.0f,
+		350.0f,
 		600.0f
 	};
 };

@@ -13,6 +13,9 @@ GameScene::~GameScene() {
 	// プレイヤー
 	delete player_;
 
+	//背景
+	delete backGround_;
+
 	// スコア
 	delete score_;
 
@@ -36,6 +39,11 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	// -------------------------
+	// 背景
+	// -------------------------
+	backGround_ = new Background();
+	backGround_->Initialize();
+	// -------------------------
 	// プレイヤー
 	// -------------------------
 
@@ -53,7 +61,7 @@ void GameScene::Initialize() {
 	// 初期値
 	// -------------------------
 
-	isGameOver_ = false;
+	isFinished_ = false;
 
 	rockSpawnTimer_ = 0;
 	itemSpawnTimer_ = 0;
@@ -68,9 +76,15 @@ void GameScene::Update() {
 	// ゲームオーバーなら更新停止
 	// ===================================
 
-	if (isGameOver_) {
+	if (isFinished_) {
 		return;
 	}
+
+	// ===================================
+	// 背景
+	// ===================================
+	
+	backGround_->Update();
 
 	// ===================================
 	// Player
@@ -142,6 +156,11 @@ void GameScene::Draw() {
 		dxCommon_->GetCommandList();
 
 	Sprite::PreDraw(commandList);
+	
+	// ===================================
+	// 背景
+	// ===================================
+	backGround_->Draw();
 
 	// ===================================
 	// 岩
@@ -245,7 +264,7 @@ void GameScene::CheckCollisions() {
 		)) {
 
 			// 岩に当たった
-			isGameOver_ = true;
+			isFinished_ = true;
 
 			return;
 		}
